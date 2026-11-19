@@ -1,0 +1,39 @@
+# Secrets
+.env
+!.env.example
+*.pem
+*.key
+
+# Node.js
+node_modules/
+dist/
+coverage/
+*.log
+npm-debug.log*
+
+# Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+**/build/
+**/.packages
+pubspec.lock
+!mobile/pubspec.lock
+!admin/pubspec.lock
+
+# IDEs
+.idea/
+*.iml
+.vscode/settings.json
+.vscode/launch.json
+!.vscode/extensions.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Local database files
+data/db/

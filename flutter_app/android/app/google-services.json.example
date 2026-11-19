@@ -1,0 +1,26 @@
+{
+  "IMPORTANT": "Replace this file with the real google-services.json downloaded from Firebase Console",
+  "HOW TO GET IT": [
+    "1. Go to https://console.firebase.google.com/project/blooddonorfinder-f1ee8",
+    "2. Click Project Settings (gear icon)",
+    "3. Under 'Your apps', click Add App > Android",
+    "4. Package name: com.example.blood_donor_finder",
+    "5. Download google-services.json",
+    "6. Replace this file with the downloaded one"
+  ],
+  "project_info": {
+    "project_number": "YOUR_PROJECT_NUMBER",
+    "project_id": "blooddonorfinder-f1ee8",
+    "storage_bucket": "blooddonorfinder-f1ee8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:YOUR_NUMBER:android:HASH",
+        "android_client_info": {
+          "package_name": "com.example.blood_donor_finder"
+        }
+      }
+    }
+  ]
+}

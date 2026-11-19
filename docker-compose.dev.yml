@@ -1,0 +1,61 @@
+version: '3.9'
+
+# =============================================================================
+# PulseNet — Development Docker Compose
+# =============================================================================
+# Provides only the backing services (MongoDB + Redis) with ports exposed.
+# The backend runs locally via: cd backend && npm run dev
+#
+# Usage:
+#   docker-compose -f docker-compose.dev.yml up -d
+#   cd backend && npm run dev
+# =============================================================================
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # MongoDB 7 — exposed on host port 27017
+  # ---------------------------------------------------------------------------
+  mongodb:
+    image: mongo:7
+    container_name: pulsenet-mongo-dev
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: pulsenet
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_dev_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # ---------------------------------------------------------------------------
+  # Redis 7 — exposed on host port 6379
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: pulsenet-redis-dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_dev_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+# =============================================================================
+# Volumes
+# =============================================================================
+volumes:
+  mongo_dev_data:
+    name: pulsenet-mongo-dev-data
+  redis_dev_data:
+    name: pulsenet-redis-dev-data

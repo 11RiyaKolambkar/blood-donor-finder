@@ -1,0 +1,107 @@
+version: '3.9'
+
+# =============================================================================
+# PulseNet — Production Docker Compose
+# =============================================================================
+# Usage:
+#   docker-compose -f docker-compose.yml up -d
+#
+# Prerequisites:
+#   - Copy backend/.env.example to backend/.env and fill in real values
+#   - Ensure FCM/Razorpay/Maps keys are set if features are enabled
+# =============================================================================
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # MongoDB 7
+  # ---------------------------------------------------------------------------
+  mongodb:
+    image: mongo:7
+    container_name: pulsenet-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-pulsenet}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-changeme}
+      MONGO_INITDB_DATABASE: pulsenet
+    volumes:
+      - mongo_data:/data/db
+      - mongo_config:/data/configdb
+    networks:
+      - pulsenet-internal
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # ---------------------------------------------------------------------------
+  # Redis 7 (optional — backend gracefully degrades when Redis is unreachable)
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: pulsenet-redis
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --save ""
+    volumes:
+      - redis_data:/data
+    networks:
+      - pulsenet-internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+  # ---------------------------------------------------------------------------
+  # PulseNet Backend API
+  # ---------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pulsenet-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      # Override connection strings to use Docker service names
+      MONGODB_URI: mongodb://${MONGO_ROOT_USER:-pulsenet}:${MONGO_ROOT_PASSWORD:-changeme}@mongodb:27017/pulsenet?authSource=admin
+      REDIS_URL: redis://redis:6379
+      NODE_ENV: production
+    ports:
+      - "5000:5000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - pulsenet-internal
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5000/api/v1/health', r => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+# =============================================================================
+# Networks
+# =============================================================================
+networks:
+  pulsenet-internal:
+    driver: bridge
+    name: pulsenet-internal
+
+# =============================================================================
+# Volumes
+# =============================================================================
+volumes:
+  mongo_data:
+    name: pulsenet-mongo-data
+  mongo_config:
+    name: pulsenet-mongo-config
+  redis_data:
+    name: pulsenet-redis-data

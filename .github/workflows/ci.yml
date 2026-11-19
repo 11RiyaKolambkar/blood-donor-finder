@@ -1,0 +1,112 @@
+name: PulseNet CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Backend — Node.js / TypeScript
+  # ---------------------------------------------------------------------------
+  backend:
+    name: Backend (Node 20)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    services:
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval \"db.adminCommand('ping').ok\""
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Run tests
+        run: npm test
+        env:
+          NODE_ENV: test
+          MONGODB_URI: mongodb://localhost:27017/pulsenet_test
+          JWT_ACCESS_SECRET: ci-access-secret-not-for-production
+          JWT_REFRESH_SECRET: ci-refresh-secret-not-for-production
+          JWT_ACCESS_EXPIRY: 15m
+          JWT_REFRESH_EXPIRY: 7d
+          BCRYPT_ROUNDS: 4
+          REDIS_ENABLED: false
+          FCM_ENABLED: false
+          RAZORPAY_ENABLED: false
+          GOOGLE_MAPS_ENABLED: false
+
+      - name: Build
+        run: npm run build
+
+  # ---------------------------------------------------------------------------
+  # Flutter App
+  # ---------------------------------------------------------------------------
+  flutter:
+    name: Flutter (stable)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: flutter_app
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter (stable)
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze (dart analyze)
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run tests
+        run: flutter test --coverage
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        if: github.event_name != 'pull_request'
+        with:
+          files: flutter_app/coverage/lcov.info
+          flags: flutter
+        continue-on-error: true
