@@ -27,7 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedIndex: _idx,
         onDestinationSelected: (i) => setState(() => _idx = i),
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.dashboard), label: 'Dashboard'),
+          NavigationDestination(
+              icon: Icon(Icons.dashboard), label: 'Dashboard'),
           NavigationDestination(icon: Icon(Icons.location_on), label: 'Donors'),
           NavigationDestination(icon: Icon(Icons.emergency), label: 'Request'),
           NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),

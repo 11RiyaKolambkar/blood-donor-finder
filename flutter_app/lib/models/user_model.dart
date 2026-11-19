@@ -27,18 +27,22 @@ class UserModel {
         phone: json['phone'] ?? '',
         role: json['role'] ?? 'recipient',
         isAvailable: json['isAvailable'] ?? true,
-        location: json['location'] != null ? Map<String, dynamic>.from(json['location']) : null,
+        location: json['location'] != null
+            ? Map<String, dynamic>.from(json['location'])
+            : null,
       );
 
   double? get lat {
     final coords = location?['coordinates'];
-    if (coords is List && coords.length >= 2) return (coords[1] as num).toDouble();
+    if (coords is List && coords.length >= 2)
+      return (coords[1] as num).toDouble();
     return null;
   }
 
   double? get lng {
     final coords = location?['coordinates'];
-    if (coords is List && coords.isNotEmpty) return (coords[0] as num).toDouble();
+    if (coords is List && coords.isNotEmpty)
+      return (coords[0] as num).toDouble();
     return null;
   }
 

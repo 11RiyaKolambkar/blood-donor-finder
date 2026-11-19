@@ -64,9 +64,13 @@ class AuthProvider extends ChangeNotifier {
   void updateAvailability(bool value) {
     if (_user != null) {
       _user = UserModel(
-        id: _user!.id, name: _user!.name, email: _user!.email,
-        bloodGroup: _user!.bloodGroup, phone: _user!.phone,
-        role: _user!.role, isAvailable: value,
+        id: _user!.id,
+        name: _user!.name,
+        email: _user!.email,
+        bloodGroup: _user!.bloodGroup,
+        phone: _user!.phone,
+        role: _user!.role,
+        isAvailable: value,
       );
       notifyListeners();
     }

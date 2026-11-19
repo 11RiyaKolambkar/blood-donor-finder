@@ -23,7 +23,8 @@ class DonorService {
       'radius': radius.toString(),
       if (bloodGroup != null && bloodGroup.isNotEmpty) 'bloodGroup': bloodGroup,
     };
-    final uri = Uri.parse('$baseUrl/donors/nearby').replace(queryParameters: queryParams);
+    final uri = Uri.parse('$baseUrl/donors/nearby')
+        .replace(queryParameters: queryParams);
     final headers = <String, String>{};
     if (token != null && token.isNotEmpty) {
       headers['Authorization'] = 'Bearer $token';
@@ -37,7 +38,9 @@ class DonorService {
           : (data is Map && data.containsKey('data'))
               ? data['data']
               : (data is List ? data : []);
-      return (list as List).map((d) => UserModel.fromJson(Map<String, dynamic>.from(d))).toList();
+      return (list as List)
+          .map((d) => UserModel.fromJson(Map<String, dynamic>.from(d)))
+          .toList();
     }
     throw Exception('Failed to fetch donors: ${res.statusCode}');
   }

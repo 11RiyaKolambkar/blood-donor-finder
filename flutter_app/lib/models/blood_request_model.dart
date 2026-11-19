@@ -37,7 +37,8 @@ class BloodRequest {
       contactPhone: (json['contactPhone'] ?? '').toString(),
       donorName: (json['donorName'] ?? matched?['name'] ?? '').toString(),
       donorPhone: (json['donorPhone'] ?? matched?['phone'] ?? '').toString(),
-      donorBloodGroup: (json['donorBloodGroup'] ?? matched?['bloodGroup'] ?? '').toString(),
+      donorBloodGroup:
+          (json['donorBloodGroup'] ?? matched?['bloodGroup'] ?? '').toString(),
       createdAt: (json['createdAt'] ?? '').toString(),
     );
   }

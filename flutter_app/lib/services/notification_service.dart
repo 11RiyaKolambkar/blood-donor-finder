@@ -4,8 +4,10 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'web_notification_stub.dart'
     if (dart.library.html) 'web_notification_web.dart' as web_notifications;
 
-final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
-const _webVapidKey = 'BEtWZ1tp9qLCNOQZz25IiDdsKaG1b6zUzSEUoOR8uL7CQY3hnWN2ZNKNmCt0QVaLzTE0_A3Ai0DPSgNcOOMevBE';
+final FlutterLocalNotificationsPlugin _localNotifications =
+    FlutterLocalNotificationsPlugin();
+const _webVapidKey =
+    'BEtWZ1tp9qLCNOQZz25IiDdsKaG1b6zUzSEUoOR8uL7CQY3hnWN2ZNKNmCt0QVaLzTE0_A3Ai0DPSgNcOOMevBE';
 
 // Background message handler (must be top-level)
 @pragma('vm:entry-point')
@@ -30,7 +32,9 @@ class NotificationService {
 
     // Request permission
     await FirebaseMessaging.instance.requestPermission(
-      alert: true, badge: true, sound: true,
+      alert: true,
+      badge: true,
+      sound: true,
     );
 
     // Init local notifications
@@ -42,12 +46,14 @@ class NotificationService {
 
     // Foreground notification channel (Android)
     const channel = AndroidNotificationChannel(
-      'blood_donor_channel', 'Blood Donor Alerts',
+      'blood_donor_channel',
+      'Blood Donor Alerts',
       description: 'Emergency blood donation notifications',
       importance: Importance.max,
     );
     await _localNotifications
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
     // Foreground message handler
@@ -68,8 +74,10 @@ class NotificationService {
       notification.body,
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'blood_donor_channel', 'Blood Donor Alerts',
-          importance: Importance.max, priority: Priority.high,
+          'blood_donor_channel',
+          'Blood Donor Alerts',
+          importance: Importance.max,
+          priority: Priority.high,
           icon: '@mipmap/ic_launcher',
         ),
       ),

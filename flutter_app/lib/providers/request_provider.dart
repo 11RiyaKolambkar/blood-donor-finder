@@ -31,8 +31,11 @@ class RequestProvider extends ChangeNotifier {
     notifyListeners();
     try {
       final req = await _service.createRequest(
-        bloodGroup: bloodGroup, urgency: urgency,
-        message: message, lat: lat, lng: lng,
+        bloodGroup: bloodGroup,
+        urgency: urgency,
+        message: message,
+        lat: lat,
+        lng: lng,
       );
       _requests.insert(0, req);
     } finally {

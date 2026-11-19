@@ -2,8 +2,7 @@ import { Request, Response } from 'express';
 import { z } from 'zod';
 import { Donor } from '../models/Donor';
 import { Profile } from '../models/Profile';
-import { User } from '../models/User';
-import { AuthRequest, BloodGroup, UserRole } from '../types';
+import { AuthRequest, BloodGroup } from '../types';
 import { sendSuccess, sendError, ErrorCodes } from '../utils/apiResponse';
 import { getCompatibleDonors } from '../utils/bloodCompatibility';
 

@@ -28,7 +28,8 @@ class _NearbyDonorsScreenState extends State<NearbyDonorsScreen> {
   Future<void> _initAndLoad() async {
     try {
       await Geolocator.requestPermission();
-      final pos = await Geolocator.getCurrentPosition().timeout(const Duration(seconds: 4));
+      final pos = await Geolocator.getCurrentPosition()
+          .timeout(const Duration(seconds: 4));
       if (mounted) setState(() => _pos = pos);
     } catch (_) {
       // Handled silently for web / desktop without GPS
@@ -86,10 +87,13 @@ class _NearbyDonorsScreenState extends State<NearbyDonorsScreen> {
                     decoration: const InputDecoration(
                       labelText: 'Blood Group',
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                     ),
                     items: bloodGroups
-                        .map((g) => DropdownMenuItem(value: g, child: Text(g.isEmpty ? 'All Groups' : g)))
+                        .map((g) => DropdownMenuItem(
+                            value: g,
+                            child: Text(g.isEmpty ? 'All Groups' : g)))
                         .toList(),
                     onChanged: (v) {
                       setState(() => _bloodGroup = v ?? '');
@@ -101,7 +105,11 @@ class _NearbyDonorsScreenState extends State<NearbyDonorsScreen> {
                 ElevatedButton.icon(
                   onPressed: _loading ? null : _search,
                   icon: _loading
-                      ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: Colors.white))
                       : const Icon(Icons.search),
                   label: const Text('Search'),
                 ),
@@ -118,11 +126,13 @@ class _NearbyDonorsScreenState extends State<NearbyDonorsScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.person_off, size: 64, color: Colors.grey[400]),
+                            Icon(Icons.person_off,
+                                size: 64, color: Colors.grey[400]),
                             const SizedBox(height: 12),
                             const Text(
                               'No donors matching this filter',
-                              style: TextStyle(fontSize: 16, color: Colors.grey),
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.grey),
                             ),
                             const SizedBox(height: 12),
                             ElevatedButton(

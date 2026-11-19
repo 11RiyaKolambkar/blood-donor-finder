@@ -44,7 +44,10 @@ class AuthService {
     final token = await _getToken();
     await http.put(
       Uri.parse('$baseUrl/auth/location'),
-      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
       body: jsonEncode({'lat': lat, 'lng': lng, 'fcmToken': fcmToken}),
     );
   }

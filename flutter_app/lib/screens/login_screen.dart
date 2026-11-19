@@ -20,7 +20,9 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!_formKey.currentState!.validate()) return;
     try {
       final fcmToken = await NotificationService.getToken();
-      await context.read<AuthProvider>().login(_email.text.trim(), _password.text);
+      await context
+          .read<AuthProvider>()
+          .login(_email.text.trim(), _password.text);
       try {
         final position = await Geolocator.getCurrentPosition();
         await AuthService().updateLocation(
@@ -32,14 +34,17 @@ class _LoginScreenState extends State<LoginScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Logged in, but location or notification setup failed: $error'),
+              content: Text(
+                  'Logged in, but location or notification setup failed: $error'),
             ),
           );
         }
       }
       if (mounted) Navigator.pushReplacementNamed(context, '/home');
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+      if (mounted)
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
     }
   }
 
@@ -57,27 +62,39 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const Text('🩸', style: TextStyle(fontSize: 60)),
                   const SizedBox(height: 8),
-                  const Text('Welcome Back', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  const Text('Welcome Back',
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 32),
                   TextFormField(
                     controller: _email,
-                    decoration: const InputDecoration(labelText: 'Email', prefixIcon: Icon(Icons.email), border: OutlineInputBorder()),
+                    decoration: const InputDecoration(
+                        labelText: 'Email',
+                        prefixIcon: Icon(Icons.email),
+                        border: OutlineInputBorder()),
                     keyboardType: TextInputType.emailAddress,
-                    validator: (v) => v!.contains('@') ? null : 'Enter valid email',
+                    validator: (v) =>
+                        v!.contains('@') ? null : 'Enter valid email',
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _password,
-                    decoration: const InputDecoration(labelText: 'Password', prefixIcon: Icon(Icons.lock), border: OutlineInputBorder()),
+                    decoration: const InputDecoration(
+                        labelText: 'Password',
+                        prefixIcon: Icon(Icons.lock),
+                        border: OutlineInputBorder()),
                     obscureText: true,
-                    validator: (v) => v!.length >= 6 ? null : 'Min 6 characters',
+                    validator: (v) =>
+                        v!.length >= 6 ? null : 'Min 6 characters',
                   ),
                   const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: loading ? null : _login,
-                      child: loading ? const CircularProgressIndicator(color: Colors.white) : const Text('Login', style: TextStyle(fontSize: 16)),
+                      child: loading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text('Login', style: TextStyle(fontSize: 16)),
                     ),
                   ),
                   TextButton(

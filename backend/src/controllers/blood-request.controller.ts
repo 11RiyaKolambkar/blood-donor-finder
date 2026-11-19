@@ -1,15 +1,13 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { z } from 'zod';
 import { BloodRequest, BloodRequestStatus, UrgencyLevel } from '../models/BloodRequest';
 import { Profile } from '../models/Profile';
-import { User } from '../models/User';
 import { Donor } from '../models/Donor';
 import { AuthRequest, BloodGroup, UserRole } from '../types';
 import { sendSuccess, sendError, ErrorCodes } from '../utils/apiResponse';
 import { emitBloodRequestUpdate } from '../utils/socketSetup';
 import { BLOOD_COMPATIBILITY_MAP } from '../utils/bloodCompatibility';
 
-const urgencyValues: [UrgencyLevel, ...UrgencyLevel[]] = ['routine', 'urgent', 'critical'];
 const statusValues: [BloodRequestStatus, ...BloodRequestStatus[]] = [
   'pending',
   'matched',
@@ -160,7 +158,7 @@ export const getMyRequests = async (req: AuthRequest, res: Response): Promise<vo
         const donorUser: any = donorDoc.userId;
         const donorUserId = donorUser?._id || donorUser;
         let donorName = 'Verified Donor';
-        let donorPhone = donorUser?.phone || '+91 9876543210';
+        const donorPhone = donorUser?.phone || '+91 9876543210';
         const donorBlood = donorDoc.bloodGroup || 'Compatible';
 
         if (donorUserId) {

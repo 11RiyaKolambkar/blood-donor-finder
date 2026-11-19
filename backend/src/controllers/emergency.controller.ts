@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { z } from 'zod';
 import { Emergency, IEmergencyEvent } from '../models/Emergency';
 import { AuditLog } from '../models/AuditLog';

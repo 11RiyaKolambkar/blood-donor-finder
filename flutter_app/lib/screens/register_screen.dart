@@ -27,16 +27,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
     try {
       final fcmToken = await NotificationService.getToken();
       await context.read<AuthProvider>().register({
-        'name': _name.text.trim(), 'email': _email.text.trim(),
-        'password': _password.text, 'phone': _phone.text.trim(),
-        'bloodGroup': _bloodGroup, 'role': _role,
+        'name': _name.text.trim(),
+        'email': _email.text.trim(),
+        'password': _password.text,
+        'phone': _phone.text.trim(),
+        'bloodGroup': _bloodGroup,
+        'role': _role,
       });
       // Update location + FCM token
       final pos = await Geolocator.getCurrentPosition();
-      await AuthService().updateLocation(pos.latitude, pos.longitude, fcmToken ?? '');
+      await AuthService()
+          .updateLocation(pos.latitude, pos.longitude, fcmToken ?? '');
       if (mounted) Navigator.pushReplacementNamed(context, '/home');
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+      if (mounted)
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
     }
   }
 
@@ -58,26 +64,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ]) ...[
               TextFormField(
                 controller: f.$1,
-                decoration: InputDecoration(labelText: f.$2, prefixIcon: Icon(f.$3), border: const OutlineInputBorder()),
+                decoration: InputDecoration(
+                    labelText: f.$2,
+                    prefixIcon: Icon(f.$3),
+                    border: const OutlineInputBorder()),
                 obscureText: f.$4,
-                keyboardType: f.$2 == 'Email' ? TextInputType.emailAddress : TextInputType.text,
+                keyboardType: f.$2 == 'Email'
+                    ? TextInputType.emailAddress
+                    : TextInputType.text,
                 validator: (v) => v!.isNotEmpty ? null : 'Required',
               ),
               const SizedBox(height: 16),
             ],
             DropdownButtonFormField<String>(
               value: _bloodGroup,
-              decoration: const InputDecoration(labelText: 'Blood Group', border: OutlineInputBorder()),
-              items: bloodGroups.map((g) => DropdownMenuItem(value: g, child: Text(g))).toList(),
+              decoration: const InputDecoration(
+                  labelText: 'Blood Group', border: OutlineInputBorder()),
+              items: bloodGroups
+                  .map((g) => DropdownMenuItem(value: g, child: Text(g)))
+                  .toList(),
               onChanged: (v) => setState(() => _bloodGroup = v!),
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
               value: _role,
-              decoration: const InputDecoration(labelText: 'Role', border: OutlineInputBorder()),
+              decoration: const InputDecoration(
+                  labelText: 'Role', border: OutlineInputBorder()),
               items: const [
-                DropdownMenuItem(value: 'recipient', child: Text('Recipient (need blood)')),
-                DropdownMenuItem(value: 'donor', child: Text('Donor (can donate)')),
+                DropdownMenuItem(
+                    value: 'recipient', child: Text('Recipient (need blood)')),
+                DropdownMenuItem(
+                    value: 'donor', child: Text('Donor (can donate)')),
               ],
               onChanged: (v) => setState(() => _role = v!),
             ),
@@ -86,7 +103,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: loading ? null : _register,
-                child: loading ? const CircularProgressIndicator(color: Colors.white) : const Text('Register', style: TextStyle(fontSize: 16)),
+                child: loading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text('Register', style: TextStyle(fontSize: 16)),
               ),
             ),
             TextButton(

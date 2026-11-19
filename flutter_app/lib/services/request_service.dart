@@ -20,8 +20,17 @@ class RequestService {
     final token = await _getToken();
     final res = await http.post(
       Uri.parse('$baseUrl/requests'),
-      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
-      body: jsonEncode({'bloodGroup': bloodGroup, 'urgency': urgency, 'message': message, 'lat': lat, 'lng': lng}),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+      body: jsonEncode({
+        'bloodGroup': bloodGroup,
+        'urgency': urgency,
+        'message': message,
+        'lat': lat,
+        'lng': lng
+      }),
     );
     final body = jsonDecode(res.body);
     if (res.statusCode == 201) return BloodRequest.fromJson(body['request']);
@@ -35,7 +44,9 @@ class RequestService {
       headers: {'Authorization': 'Bearer $token'},
     );
     if (res.statusCode == 200) {
-      return (jsonDecode(res.body) as List).map((r) => BloodRequest.fromJson(r)).toList();
+      return (jsonDecode(res.body) as List)
+          .map((r) => BloodRequest.fromJson(r))
+          .toList();
     }
     throw Exception('Failed to fetch requests');
   }
@@ -44,7 +55,10 @@ class RequestService {
     final token = await _getToken();
     final res = await http.patch(
       Uri.parse('$baseUrl/requests/$requestId/status'),
-      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
       body: jsonEncode({'status': 'accepted'}),
     );
     return res.statusCode == 200;
