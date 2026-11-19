@@ -1,17 +1,24 @@
-# blood_donor_finder
+# PulseNet Flutter app
 
-A new Flutter project.
+This Flutter client provides donor and blood-request screens. It uses Provider for state management and Firebase for app services.
 
-## Getting Started
+## Run
 
-This project is a starting point for a Flutter application.
+Install Flutter with a Dart SDK compatible with `pubspec.yaml`, then run:
 
-A few resources to get you started if this is your first Flutter project:
+```powershell
+flutter pub get
+flutter run -d chrome
+```
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+The app expects an API on port `5000`. Its URL is defined in `lib/config/api_config.dart`: web uses `http://localhost:5000/api`, while the Android emulator uses `http://10.0.2.2:5000/api`. For a physical device, configure the computer's LAN IP.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Firebase options are in `lib/firebase_options.dart`. Configure them for your Firebase project when setting up your own deployment.
+
+## Checks
+
+```powershell
+dart format --output=none --set-exit-if-changed .
+flutter analyze --no-fatal-infos
+flutter test --coverage
+```
